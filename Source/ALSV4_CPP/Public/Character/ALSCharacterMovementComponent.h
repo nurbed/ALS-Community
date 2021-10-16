@@ -79,4 +79,7 @@ class ALSV4_CPP_API UALSCharacterMovementComponent : public UCharacterMovementCo
 
 	UFUNCTION(Reliable, Server, Category = "Movement Settings")
 	void Server_SetAllowedGait(EALSGait NewAllowedGait);
+
+	protected:
+	virtual void BeginPlay() override;
 };

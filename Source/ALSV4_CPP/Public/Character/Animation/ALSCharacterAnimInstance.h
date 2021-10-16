@@ -38,7 +38,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation")
-	void PlayTransition(const FALSDynamicMontageParams& Parameters);
+	virtual void PlayTransition(const FALSDynamicMontageParams& Parameters);//@Galileo mod added virtual
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation")
 	void PlayTransitionChecked(const FALSDynamicMontageParams& Parameters);
@@ -126,8 +126,8 @@ private:
 	/** Foot IK */
 
 	void SetFootLocking(float DeltaSeconds, FName EnableFootIKCurve, FName FootLockCurve, FName IKFootBone,
-                          float& CurFootLockAlpha, bool& UseFootLockCurve,
-                          FVector& CurFootLockLoc, FRotator& CurFootLockRot);
+	                    float& CurFootLockAlpha, bool& UseFootLockCurve,
+	                    FVector& CurFootLockLoc, FRotator& CurFootLockRot);
 
 	void SetFootLockOffsets(float DeltaSeconds, FVector& LocalLoc, FRotator& LocalRot);
 
@@ -136,7 +136,7 @@ private:
 	void ResetIKOffsets(float DeltaSeconds);
 
 	void SetFootOffsets(float DeltaSeconds, FName EnableFootIKCurve, FName IKFootBone, FName RootBone,
-                          FVector& CurLocationTarget, FVector& CurLocationOffset, FRotator& CurRotationOffset);
+	                    FVector& CurLocationTarget, FVector& CurLocationOffset, FRotator& CurRotationOffset);
 
 	/** Grounded */
 
@@ -262,7 +262,7 @@ protected:
 
 	/** Rotate In Place */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Rotate In Place", Meta = (
-		    ShowOnlyInnerProperties))
+		ShowOnlyInnerProperties))
 	FALSAnimRotateInPlace RotateInPlace;
 
 	/** Configuration */
@@ -307,9 +307,14 @@ protected:
 	/** IK Bone Names */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Anim Graph - Foot IK")
 	FName IkFootL_BoneName = NAME_ik_foot_l;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Anim Graph - Foot IK")
 	FName IkFootR_BoneName = NAME_ik_foot_r;
+
+	//@Galileo mod Begin
+	FORCEINLINE bool CanPlayDynamicTransition() const { return bCanPlayDynamicTransition; }
+	void SetCanPlayDynamicTransition(bool bValue);
+	//@Galileo mod End
 
 private:
 	FTimerHandle OnPivotTimer;

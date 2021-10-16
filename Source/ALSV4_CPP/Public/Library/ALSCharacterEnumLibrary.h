@@ -89,8 +89,11 @@ enum class EALSOverlayState : uint8
 UENUM(BlueprintType)
 enum class EALSRotationMode : uint8
 {
+	/**Default Loco*/
 	VelocityDirection,
+	/**Strafe*/
 	LookingDirection,
+	/**Strafe + Closed Camera TODO: @ALS useless ? TOREMOVE*/
 	Aiming
 };
 

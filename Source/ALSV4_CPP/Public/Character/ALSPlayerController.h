@@ -15,6 +15,7 @@ class AALSBaseCharacter;
 
 /**
  * Player controller class
+ * @ALS mod Useless for our purpose
  */
 UCLASS(Blueprintable, BlueprintType)
 class ALSV4_CPP_API AALSPlayerController : public APlayerController

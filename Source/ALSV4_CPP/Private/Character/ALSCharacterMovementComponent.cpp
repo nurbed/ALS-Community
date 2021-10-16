@@ -208,3 +208,9 @@ void UALSCharacterMovementComponent::SetAllowedGait(EALSGait NewAllowedGait)
 		}
 	}
 }
+
+void UALSCharacterMovementComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}

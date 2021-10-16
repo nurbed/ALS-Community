@@ -8,3 +8,4 @@
 #pragma once
 
 #include "CoreMinimal.h"
+ALSV4_CPP_API DECLARE_LOG_CATEGORY_EXTERN(LogALS, Log, All);//TODO: @ALS @Diego is it correct to place the log category here?

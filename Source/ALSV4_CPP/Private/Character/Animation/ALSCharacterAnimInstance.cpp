@@ -14,6 +14,7 @@
 #include "Curves/CurveVector.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "VisualLogger/VisualLogger.h"
 
 
 const FName NAME_BasePose_CLF(TEXT("BasePose_CLF"));
@@ -200,7 +201,9 @@ bool UALSCharacterAnimInstance::CanTurnInPlace() const
 
 bool UALSCharacterAnimInstance::CanDynamicTransition() const
 {
-	return GetCurveValue(NAME_Enable_Transition) >= 0.99f;
+	return
+		bCanPlayDynamicTransition //@Galileo mod
+		&& GetCurveValue(NAME_Enable_Transition) >= 0.99f;
 }
 
 void UALSCharacterAnimInstance::PlayDynamicTransitionDelay()
@@ -391,7 +394,7 @@ void UALSCharacterAnimInstance::SetFootLockOffsets(float DeltaSeconds, FVector& 
 	if (Character->GetCharacterMovement()->IsMovingOnGround())
 	{
 		RotationDifference = CharacterInformation.CharacterActorRotation - Character->GetCharacterMovement()->
-			GetLastUpdateRotation();
+		                                                                              GetLastUpdateRotation();
 		RotationDifference.Normalize();
 	}
 
@@ -569,6 +572,11 @@ void UALSCharacterAnimInstance::TurnInPlaceCheck(float DeltaSeconds)
 
 void UALSCharacterAnimInstance::DynamicTransitionCheck()
 {
+	//@Galileo mod Begin
+	if (!bCanPlayDynamicTransition) //optimization
+		return;
+	//@Galileo mod End
+
 	// Check each foot to see if the location difference between the IK_Foot bone and its desired / target location
 	// (determined via a virtual bone) exceeds a threshold. If it does, play an additive transition animation on that foot.
 	// The currently set transition plays the second half of a 2 foot transition animation, so that only a single foot moves.
@@ -585,7 +593,7 @@ void UALSCharacterAnimInstance::DynamicTransitionCheck()
 		Params.BlendOutTime = 0.2f;
 		Params.PlayRate = 1.5f;
 		Params.StartTime = 0.8f;
-		PlayDynamicTransition(0.1f, Params);
+		// PlayDynamicTransition(0.1f, Params);
 	}
 
 	SocketTransformA = GetOwningComponent()->GetSocketTransform(IkFootR_BoneName, RTS_Component);
@@ -599,7 +607,7 @@ void UALSCharacterAnimInstance::DynamicTransitionCheck()
 		Params.BlendOutTime = 0.2f;
 		Params.PlayRate = 1.5f;
 		Params.StartTime = 0.8f;
-		PlayDynamicTransition(0.1f, Params);
+		// PlayDynamicTransition(0.1f, Params);
 	}
 }
 
@@ -678,6 +686,16 @@ float UALSCharacterAnimInstance::GetAnimCurveClamped(const FName& Name, float Bi
 {
 	return FMath::Clamp(GetCurveValue(Name) + Bias, ClampMin, ClampMax);
 }
+
+//@Galileo mod Begin
+void UALSCharacterAnimInstance::SetCanPlayDynamicTransition(bool bValue)
+{
+	bCanPlayDynamicTransition = bValue;
+	if (!bCanPlayDynamicTransition && GetWorld()->GetTimerManager().IsTimerActive(PlayDynamicTransitionTimer))
+		GetWorld()->GetTimerManager().ClearTimer(PlayDynamicTransitionTimer);
+}
+
+//@Galileo mod End
 
 FALSVelocityBlend UALSCharacterAnimInstance::CalculateVelocityBlend() const
 {
@@ -768,7 +786,7 @@ float UALSCharacterAnimInstance::CalculateCrouchingPlayRate() const
 	// This value needs to be separate from the standing play rate to improve the blend from crocuh to stand while in motion.
 	return FMath::Clamp(
 		CharacterInformation.Speed / Config.AnimatedCrouchSpeed / Grounded.StrideBlend / GetOwningComponent()->
-		GetComponentScale().Z,
+		                                                                                 GetComponentScale().Z,
 		0.0f, 2.0f);
 }
 

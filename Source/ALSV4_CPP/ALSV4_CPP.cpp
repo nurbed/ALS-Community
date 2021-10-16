@@ -9,3 +9,4 @@
 #include "Modules/ModuleManager.h"
 
 IMPLEMENT_MODULE(FDefaultGameModuleImpl, ALSV4_CPP);
+DEFINE_LOG_CATEGORY(LogALS);

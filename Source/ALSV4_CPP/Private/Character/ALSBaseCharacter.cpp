@@ -9,19 +9,20 @@
 #include "Character/ALSBaseCharacter.h"
 
 
+#include "ALSSettings.h"
 #include "Character/Animation/ALSCharacterAnimInstance.h"
 #include "Character/Animation/ALSPlayerCameraBehavior.h"
 #include "Library/ALSMathLibrary.h"
 #include "Components/ALSDebugComponent.h"
 
 #include "Components/CapsuleComponent.h"
-#include "Components/TimelineComponent.h"
 #include "Curves/CurveFloat.h"
 #include "Character/ALSCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "ALSV4_CPP/ALSV4_CPP.h"
 #include "Net/UnrealNetwork.h"
 
 
@@ -48,31 +49,47 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward/Backwards", this, &AALSBaseCharacter::PlayerForwardMovementInput);
-	PlayerInputComponent->BindAxis("MoveRight/Left", this, &AALSBaseCharacter::PlayerRightMovementInput);
-	PlayerInputComponent->BindAxis("LookUp/Down", this, &AALSBaseCharacter::PlayerCameraUpInput);
-	PlayerInputComponent->BindAxis("LookLeft/Right", this, &AALSBaseCharacter::PlayerCameraRightInput);
-	PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &AALSBaseCharacter::JumpPressedAction);
-	PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &AALSBaseCharacter::JumpReleasedAction);
-	PlayerInputComponent->BindAction("StanceAction", IE_Pressed, this, &AALSBaseCharacter::StancePressedAction);
-	PlayerInputComponent->BindAction("WalkAction", IE_Pressed, this, &AALSBaseCharacter::WalkPressedAction);
-	PlayerInputComponent->BindAction("RagdollAction", IE_Pressed, this, &AALSBaseCharacter::RagdollPressedAction);
-	PlayerInputComponent->BindAction("SelectRotationMode_1", IE_Pressed, this,
-	                                 &AALSBaseCharacter::VelocityDirectionPressedAction);
-	PlayerInputComponent->BindAction("SelectRotationMode_2", IE_Pressed, this,
-	                                 &AALSBaseCharacter::LookingDirectionPressedAction);
-	PlayerInputComponent->BindAction("SprintAction", IE_Pressed, this, &AALSBaseCharacter::SprintPressedAction);
-	PlayerInputComponent->BindAction("SprintAction", IE_Released, this, &AALSBaseCharacter::SprintReleasedAction);
-	PlayerInputComponent->BindAction("AimAction", IE_Pressed, this, &AALSBaseCharacter::AimPressedAction);
-	PlayerInputComponent->BindAction("AimAction", IE_Released, this, &AALSBaseCharacter::AimReleasedAction);
-	PlayerInputComponent->BindAction("CameraAction", IE_Pressed, this, &AALSBaseCharacter::CameraPressedAction);
-	PlayerInputComponent->BindAction("CameraAction", IE_Released, this, &AALSBaseCharacter::CameraReleasedAction);
+	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputForwardAxis, this, &AALSBaseCharacter::PlayerForwardMovementInput);
+	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputRightAxis, this, &AALSBaseCharacter::PlayerRightMovementInput);
+
+	//@ALS mod the Camera is handled by the CAGCharacter
+	// PlayerInputComponent->BindAxis("LookUpRate", this, &AALSBaseCharacter::PlayerCameraUpInput);
+	// PlayerInputComponent->BindAxis("TurnRate", this, &AALSBaseCharacter::PlayerCameraRightInput);
+
+	//@ALS mod the Jump is handled by CAG
+	// PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &AALSBaseCharacter::JumpPressedAction);
+	// PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &AALSBaseCharacter::JumpReleasedAction);
+
+	//@ALS mod the stance change doesn't exist in our project TODO: @ALS remove or something can be useful ?
+	// PlayerInputComponent->BindAction("StanceAction", IE_Pressed, this, &AALSBaseCharacter::StancePressedAction);
+
+	//PlayerInputComponent->BindAction("WalkAction", IE_Pressed, this, &AALSBaseCharacter::WalkPressedAction);
+
+	//@ALS mod the Ragdoll cannot be triggered by an input TODO: @ALS remove or something can be useful ?
+	// PlayerInputComponent->BindAction("RagdollAction", IE_Pressed, this, &AALSBaseCharacter::RagdollPressedAction);
+
+	//@ALS mod the Locomotion rotation mode is triggered by the strafe TODO: @ALS remove or something can be useful ?
+	// PlayerInputComponent->BindAction("SelectRotationMode_1", IE_Pressed, this,
+	//                                  &AALSBaseCharacter::VelocityDirectionPressedAction);
+	// PlayerInputComponent->BindAction("SelectRotationMode_2", IE_Pressed, this,
+	//                                  &AALSBaseCharacter::LookingDirectionPressedAction);
+	
+	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Pressed, this, &AALSBaseCharacter::OnSprintButtonPress);
+	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Released, this, &AALSBaseCharacter::OnSprintButtonRelease);
+
+	//@ALS mod currently haven't the aim in the project TODO: @ALS remove or something can be useful ?
+	// PlayerInputComponent->BindAction("AimAction", IE_Pressed, this, &AALSBaseCharacter::AimPressedAction);
+	// PlayerInputComponent->BindAction("AimAction", IE_Released, this, &AALSBaseCharacter::AimReleasedAction);
+
+	//@ALS mod the FPS Camera and the shoulder switch aren't in the project TODO: @ALS remove or something can be useful ?
+	// PlayerInputComponent->BindAction("CameraAction", IE_Pressed, this, &AALSBaseCharacter::CameraPressedAction);
+	// PlayerInputComponent->BindAction("CameraAction", IE_Released, this, &AALSBaseCharacter::CameraReleasedAction);
 }
 
 void AALSBaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	MyCharacterMovementComponent = Cast<UALSCharacterMovementComponent>(Super::GetMovementComponent());
+	ALSCharacterMovementComponent = Cast<UALSCharacterMovementComponent>(Super::GetMovementComponent());
 }
 
 void AALSBaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -108,7 +125,7 @@ void AALSBaseCharacter::Replicated_PlayMontage_Implementation(UAnimMontage* Mont
 void AALSBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// If we're in networked game, disable curved movement
 	bEnableNetworkOptimizations = !IsNetMode(NM_Standalone);
 
@@ -154,7 +171,7 @@ void AALSBaseCharacter::BeginPlay()
 		MainAnimInstance->SetRootMotionMode(ERootMotionMode::IgnoreRootMotion);
 	}
 
-	MyCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
+	ALSCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
 
 	DebugComponent = FindComponentByClass<UALSDebugComponent>();
 }
@@ -164,13 +181,19 @@ void AALSBaseCharacter::PreInitializeComponents()
 	Super::PreInitializeComponents();
 
 	MainAnimInstance = Cast<UALSCharacterAnimInstance>(GetMesh()->GetAnimInstance());
-	if (!MainAnimInstance)
-	{
-		// Animation instance should be assigned if we're not in editor preview
-		checkf(GetWorld()->WorldType == EWorldType::EditorPreview,
-		       TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
-		       *GetName());
-	}
+	//@Galileo mod Begin
+	// if (!MainAnimInstance)
+	// {
+	// 	//Animation instance should be assigned if we're not in editor preview
+	// 	checkf(GetWorld()->WorldType == EWorldType::EditorPreview,
+	// 	       TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
+	// 	       *GetName());
+	// }
+	// Animation instance should be assigned if we're not in editor preview
+	checkf(MainAnimInstance || GetWorld()->WorldType == EWorldType::EditorPreview,
+		        TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
+		        *GetName());
+	//@Galileo mod End
 }
 
 void AALSBaseCharacter::SetAimYawRate(float NewAimYawRate)
@@ -214,7 +237,7 @@ void AALSBaseCharacter::RagdollStart()
 
 	/** When Networked, disables replicate movement reset TargetRagdollLocation and ServerRagdollPull variable
 	and if the host is a dedicated server, change character mesh optimisation option to avoid z-location bug*/
-	MyCharacterMovementComponent->bIgnoreClientMovementErrorChecksAndCorrection = 1;
+	ALSCharacterMovementComponent->bIgnoreClientMovementErrorChecksAndCorrection = 1;
 
 	if (UKismetSystemLibrary::IsDedicatedServer(GetWorld()))
 	{
@@ -250,7 +273,7 @@ void AALSBaseCharacter::RagdollEnd()
 		GetMesh()->VisibilityBasedAnimTickOption = DefVisBasedTickOp;
 	}
 
-	MyCharacterMovementComponent->bIgnoreClientMovementErrorChecksAndCorrection = 0;
+	ALSCharacterMovementComponent->bIgnoreClientMovementErrorChecksAndCorrection = 0;
 	SetReplicateMovement(true);
 
 	if (!MainAnimInstance)
@@ -298,6 +321,7 @@ void AALSBaseCharacter::SetMovementState(const EALSMovementState NewState)
 	{
 		PrevMovementState = MovementState;
 		MovementState = NewState;
+		// MainAnimInstance = Cast<UALSCharacterAnimInstance>(GetMesh()->GetAnimInstance()); //@Galileo mod -> useless
 		FALSAnimCharacterInformation& AnimData = MainAnimInstance->GetCharacterInformationMutable();
 		AnimData.PrevMovementState = PrevMovementState;
 		MainAnimInstance->MovementState = MovementState;
@@ -702,7 +726,7 @@ void AALSBaseCharacter::SetAcceleration(const FVector& NewAcceleration)
 {
 	Acceleration = (NewAcceleration != FVector::ZeroVector || IsLocallyControlled())
 		               ? NewAcceleration
-		               : Acceleration / 2;
+		               : Acceleration * .5f;
 	MainAnimInstance->GetCharacterInformationMutable().Acceleration = Acceleration;
 }
 
@@ -712,7 +736,7 @@ void AALSBaseCharacter::RagdollUpdate(float DeltaTime)
 	const FVector NewRagdollVel = GetMesh()->GetPhysicsLinearVelocity(NAME_root);
 	LastRagdollVelocity = (NewRagdollVel != FVector::ZeroVector || IsLocallyControlled())
 		                      ? NewRagdollVel
-		                      : LastRagdollVelocity / 2;
+		                      : LastRagdollVelocity * .5f;
 
 	// Use the Ragdoll Velocity to scale the ragdoll's joint strength for physical animation.
 	const float SpringValue = FMath::GetMappedRangeValueClamped({0.0f, 1000.0f}, {0.0f, 25000.0f},
@@ -880,7 +904,7 @@ void AALSBaseCharacter::OnStanceChanged(const EALSStance PreviousStance)
 		CameraBehavior->Stance = Stance;
 	}
 
-	MyCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
+	ALSCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
 }
 
 void AALSBaseCharacter::OnRotationModeChanged(EALSRotationMode PreviousRotationMode)
@@ -898,7 +922,7 @@ void AALSBaseCharacter::OnRotationModeChanged(EALSRotationMode PreviousRotationM
 		CameraBehavior->SetRotationMode(RotationMode);
 	}
 
-	MyCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
+	ALSCharacterMovementComponent->SetMovementSettings(GetTargetMovementSettings());
 }
 
 void AALSBaseCharacter::OnGaitChanged(const EALSGait PreviousGait)
@@ -1024,7 +1048,7 @@ void AALSBaseCharacter::SetEssentialValues(float DeltaTime)
 	{
 		EasedMaxAcceleration = GetCharacterMovement()->GetMaxAcceleration() != 0
 			                       ? GetCharacterMovement()->GetMaxAcceleration()
-			                       : EasedMaxAcceleration / 2;
+			                       : EasedMaxAcceleration * .5f;
 	}
 
 	// Interp AimingRotation to current control rotation for smooth character rotation movement. Decrease InterpSpeed
@@ -1081,7 +1105,7 @@ void AALSBaseCharacter::UpdateCharacterMovement()
 	}
 
 	// Update the Character Max Walk Speed to the configured speeds based on the currently Allowed Gait.
-	MyCharacterMovementComponent->SetAllowedGait(AllowedGait);
+	ALSCharacterMovementComponent->SetAllowedGait(AllowedGait);
 }
 
 void AALSBaseCharacter::UpdateGroundedRotation(float DeltaTime)
@@ -1213,8 +1237,8 @@ EALSGait AALSBaseCharacter::GetActualGait(EALSGait AllowedGait) const
 	// from the desired gait or allowed gait. For instance, if the Allowed Gait becomes walking,
 	// the Actual gait will still be running untill the character decelerates to the walking speed.
 
-	const float LocWalkSpeed = MyCharacterMovementComponent->CurrentMovementSettings.WalkSpeed;
-	const float LocRunSpeed = MyCharacterMovementComponent->CurrentMovementSettings.RunSpeed;
+	const float LocWalkSpeed = ALSCharacterMovementComponent->CurrentMovementSettings.WalkSpeed;
+	const float LocRunSpeed = ALSCharacterMovementComponent->CurrentMovementSettings.RunSpeed;
 
 	if (Speed > LocRunSpeed + 10.0f)
 	{
@@ -1249,9 +1273,9 @@ float AALSBaseCharacter::CalculateGroundedRotationRate() const
 	// Using the curve in conjunction with the mapped speed gives you a high level of control over the rotation
 	// rates for each speed. Increase the speed if the camera is rotating quickly for more responsive rotation.
 
-	const float MappedSpeedVal = MyCharacterMovementComponent->GetMappedSpeed();
+	const float MappedSpeedVal = ALSCharacterMovementComponent->GetMappedSpeed();
 	const float CurveVal =
-		MyCharacterMovementComponent->CurrentMovementSettings.RotationRateCurve->GetFloatValue(MappedSpeedVal);
+		ALSCharacterMovementComponent->CurrentMovementSettings.RotationRateCurve->GetFloatValue(MappedSpeedVal);
 	const float ClampedAimYawRate = FMath::GetMappedRangeValueClamped({0.0f, 300.0f}, {1.0f, 3.0f}, AimYawRate);
 	return CurveVal * ClampedAimYawRate;
 }
@@ -1274,8 +1298,8 @@ void AALSBaseCharacter::LimitRotation(float AimYawMin, float AimYawMax, float In
 void AALSBaseCharacter::GetControlForwardRightVector(FVector& Forward, FVector& Right) const
 {
 	const FRotator ControlRot(0.0f, AimingRotation.Yaw, 0.0f);
-	Forward = GetInputAxisValue("MoveForward/Backwards") * UKismetMathLibrary::GetForwardVector(ControlRot);
-	Right = GetInputAxisValue("MoveRight/Left") * UKismetMathLibrary::GetRightVector(ControlRot);
+	Forward = GetInputAxisValue(UALSSettings::Get()->InputForwardAxis) * UKismetMathLibrary::GetForwardVector(ControlRot);
+	Right = GetInputAxisValue(UALSSettings::Get()->InputRightAxis) * UKismetMathLibrary::GetRightVector(ControlRot);
 }
 
 FVector AALSBaseCharacter::GetPlayerMovementInput() const
@@ -1291,7 +1315,7 @@ void AALSBaseCharacter::PlayerForwardMovementInput(float Value)
 	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
 	{
 		// Default camera relative movement behavior
-		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(Value, GetInputAxisValue("MoveRight/Left")).Key;
+		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(Value, GetInputAxisValue(UALSSettings::Get()->InputRightAxis)).Key;
 		const FRotator DirRotator(0.0f, AimingRotation.Yaw, 0.0f);
 		AddMovementInput(UKismetMathLibrary::GetForwardVector(DirRotator), Scale);
 	}
@@ -1302,7 +1326,7 @@ void AALSBaseCharacter::PlayerRightMovementInput(float Value)
 	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
 	{
 		// Default camera relative movement behavior
-		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(GetInputAxisValue("MoveForward/Backwards"), Value)
+		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(GetInputAxisValue(UALSSettings::Get()->InputForwardAxis), Value)
 			.Value;
 		const FRotator DirRotator(0.0f, AimingRotation.Yaw, 0.0f);
 		AddMovementInput(UKismetMathLibrary::GetRightVector(DirRotator), Scale);
@@ -1353,12 +1377,12 @@ void AALSBaseCharacter::JumpReleasedAction()
 	StopJumping();
 }
 
-void AALSBaseCharacter::SprintPressedAction()
+void AALSBaseCharacter::OnSprintButtonPress()
 {
 	SetDesiredGait(EALSGait::Sprinting);
 }
 
-void AALSBaseCharacter::SprintReleasedAction()
+void AALSBaseCharacter::OnSprintButtonRelease()
 {
 	SetDesiredGait(EALSGait::Running);
 }
@@ -1553,3 +1577,15 @@ void AALSBaseCharacter::OnRep_VisibleMesh(USkeletalMesh* NewVisibleMesh)
 {
 	OnVisibleMeshChanged(NewVisibleMesh);
 }
+
+//@Galileo mod Begin
+#if WITH_EDITOR
+void AALSBaseCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	if(GetMesh() && GetMesh()->GetAnimInstance() && !GetMesh()->GetAnimInstance()->IsA<UALSCharacterAnimInstance>())
+	{
+		UE_LOG(LogALS, Error, TEXT("The Animation BP in the character %s must be of type ALS Character Anim Instance"), *GetName());
+	}
+}
+#endif
+//@Galileo mod End

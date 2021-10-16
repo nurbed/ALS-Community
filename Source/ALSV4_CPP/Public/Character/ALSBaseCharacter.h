@@ -42,9 +42,9 @@ public:
 	AALSBaseCharacter(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement")
-	FORCEINLINE class UALSCharacterMovementComponent* GetMyMovementComponent() const
+	FORCEINLINE class UALSCharacterMovementComponent* GetALSMovementComponent() const
 	{
-		return MyCharacterMovementComponent;
+		return ALSCharacterMovementComponent;
 	}
 
 	virtual void Tick(float DeltaTime) override;
@@ -226,7 +226,7 @@ public:
 	void SetHasMovementInput(bool bNewHasMovementInput);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement System")
-	FALSMovementSettings GetTargetMovementSettings() const;
+	virtual FALSMovementSettings GetTargetMovementSettings() const;
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement System")
 	EALSGait GetAllowedGait() const;
@@ -265,7 +265,7 @@ public:
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Utility")
 	void Server_SetVisibleMesh(USkeletalMesh* NewSkeletalMesh);
 
-	/** Camera System */
+	/** Camera System TODO: @ALS useless!!*/
 
 	UFUNCTION(BlueprintGetter, Category = "ALS|Camera System")
 	bool IsRightShoulder() const { return bRightShoulder; }
@@ -390,36 +390,55 @@ protected:
 
 	void PlayerRightMovementInput(float Value);
 
+	//@ALS mod not used by our system. Adds controller pitch. TODO: @ALS remove or something can be useful ?
 	void PlayerCameraUpInput(float Value);
 
+	//@ALS mod not used by our system. Adds controller Yaw. TODO: @ALS remove or something can be useful ?
 	void PlayerCameraRightInput(float Value);
 
+	//@ALS mod not used by our system TODO: @ALS remove or something can be useful ?
 	void JumpPressedAction();
-
+	
+	//@ALS mod not used by our system TODO: @ALS remove or something can be useful ?
 	void JumpReleasedAction();
 
-	void SprintPressedAction();
+	//@ALS mod -> before was void SprintPressedAction();
+	virtual void OnSprintButtonPress();
+	
+	//@ALS mod -> before was void SprintReleasedAction();
+	virtual void OnSprintButtonRelease();
 
-	void SprintReleasedAction();
-
+	//@ALS mod -> currently isn't in game TODO: @ALS remove or something can be useful ?
 	void AimPressedAction();
 
+	//@ALS mod -> currently isn't in game TODO: @ALS remove or something can be useful ?
 	void AimReleasedAction();
 
+	//@ALS mod not used by our game.
+	//This func toggles the switch between first to third person after a delay.
+	//If the button is released before the delay doesn't makes the switch.
+	//TODO: @ALS remove or something can be useful ?
 	void CameraPressedAction();
 
+	//@ALS mod not used by our game.
+	//This func toggles the shoulder switch if the button has been holded less than ViewModeSwitchHoldTime
+	//TODO: @ALS remove or something can be useful ?
 	void CameraReleasedAction();
 
 	void OnSwitchCameraMode();
 
+	//@ALS mod not used by our system. This func toggles the stance change. TODO: @ALS remove or something can be useful ?
 	void StancePressedAction();
 
 	void WalkPressedAction();
 
+	//@ALS mod can't be triggered via input. This func toggles the ragdoll. TODO: @ALS remove or something can be useful ?
 	void RagdollPressedAction();
 
+	//@ALS mod can't be triggered via input. This func triggers movement NOT strafed. TODO: @ALS remove or something can be useful ?
 	void VelocityDirectionPressedAction();
 
+	//@ALS mod can't be triggered via input. This func triggers movement strafed. TODO: @ALS remove or something can be useful ?
 	void LookingDirectionPressedAction();
 
 	/** Replication */
@@ -438,7 +457,7 @@ protected:
 protected:
 	/* Custom movement component*/
 	UPROPERTY()
-	UALSCharacterMovementComponent* MyCharacterMovementComponent;
+	UALSCharacterMovementComponent* ALSCharacterMovementComponent;
 
 	/** Input */
 
@@ -581,7 +600,7 @@ protected:
 
 	/** If player hits to the ground with an amount of velocity greater than specified value, switch to breakfall state */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Breakfall System", meta = (EditCondition =
-	        "bBreakfallOnLand"))
+		"bBreakfallOnLand"))
 	float BreakfallOnLandVelocity = 600.0f;
 
 	/** Ragdoll System */
@@ -596,7 +615,7 @@ protected:
 
 	/** If player hits to the ground with an amount of velocity greater than specified value, switch to ragdoll state */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Ragdoll System", meta = (EditCondition =
-	        "bRagdollOnLand"))
+		"bRagdollOnLand"))
 	float RagdollOnLandVelocity = 1000.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "ALS|Ragdoll System")
@@ -648,5 +667,14 @@ protected:
 	bool bEnableNetworkOptimizations = false;
 
 private:
+	//TODO: @ALS surround with WITH_EDITOR_DATA or !UE_SHIPPING
+	// ReSharper disable once CppUE4ProbableMemoryIssuesWithUObject
 	UALSDebugComponent* DebugComponent = nullptr;
+
+	//@Galileo mod Begin
+protected:
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+	//@Galileo mod End
 };
