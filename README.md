@@ -1,7 +1,7 @@
 # Advanced Locomotion System Community
 ![image](https://github.com/dyanikoglu/ALS-Community/raw/main/Resources/Readme_Content_2.gif)
 
-Replicated and optimized community version of [Advanced Locomotion System V4](https://www.unrealengine.com/marketplace/en-US/product/advanced-locomotion-system-v1) for **Unreal Engine 4.26** with additional bug fixes.
+Replicated and optimized community version of [Advanced Locomotion System V4](https://www.unrealengine.com/marketplace/en-US/product/advanced-locomotion-system-v1) for **Unreal Engine 4.27** with additional bug fixes.
 
 <p align="center">
   <a href="https://discord.gg/wYYMHFu"><img src="https://i.imgur.com/LP9bZQj.png"></a>
@@ -16,7 +16,7 @@ Replicated and optimized community version of [Advanced Locomotion System V4](ht
 ## Features
 - Based on latest marketplace release (V4) of Advanced Locomotion System
 - Fully implemented in C++
-- Full replication support with low bandwidth usage
+- Full replication support with low bandwidth usage (Ragdoll replication is in experimental state)
 - Plugin structure
 - Highly optimized for production
 - Mantling and debugging features are implemented as a separate plug-in/plug-out type actor component to reduce total overhead on base character class

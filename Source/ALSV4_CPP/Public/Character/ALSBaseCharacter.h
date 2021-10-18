@@ -133,9 +133,6 @@ public:
 	UFUNCTION(BlueprintGetter, Category = "ALS|Character States")
 	EALSOverlayState GetOverlayState() const { return OverlayState; }
 
-	UFUNCTION(BlueprintGetter, Category = "ALS|Character States")
-	EALSOverlayState SwitchRight() const { return OverlayState; }
-
 	/** Landed, Jumped, Rolling, Mantling and Ragdoll*/
 	/** On Landed*/
 	UFUNCTION(BlueprintCallable, Category = "ALS|Character States")
@@ -669,6 +666,7 @@ protected:
 private:
 	//TODO: @ALS surround with WITH_EDITOR_DATA or !UE_SHIPPING
 	// ReSharper disable once CppUE4ProbableMemoryIssuesWithUObject
+	UPROPERTY()
 	UALSDebugComponent* DebugComponent = nullptr;
 
 	//@Galileo mod Begin

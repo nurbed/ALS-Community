@@ -325,5 +325,6 @@ private:
 
 	bool bCanPlayDynamicTransition = true;
 
+	UPROPERTY()
 	UALSDebugComponent* DebugComponent = nullptr;
 };
