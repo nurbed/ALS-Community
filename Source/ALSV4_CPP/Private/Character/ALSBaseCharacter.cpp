@@ -1116,15 +1116,18 @@ void AALSBaseCharacter::UpdateGroundedRotation(float DeltaTime)
 {
 	if (MovementAction == EALSMovementAction::None)
 	{
-		const bool bCanUpdateMovingRot = ((bIsMoving && bHasMovementInput) || Speed > 150.0f) && !HasAnyRootMotion();
+		// JYAMMA MOD BEGIN
+		// Adding a check on playing generic montage. This exclude the ALS update of the character orientation and permit the tracking of the enemies
+		const bool bCanPlayingMontage = GetMesh()->GetAnimInstance()->Montage_IsPlaying(NULL);
+		const bool bCanUpdateMovingRot = ((bIsMoving && bHasMovementInput) || Speed > 150.0f) && !HasAnyRootMotion() && !bCanPlayingMontage;
+		// JYAMMA MOD END
 		if (bCanUpdateMovingRot)
 		{
 			const float GroundedRotationRate = CalculateGroundedRotationRate();
 			if (RotationMode == EALSRotationMode::VelocityDirection)
 			{
 				// Velocity Direction Rotation
-				SmoothCharacterRotation({0.0f, LastVelocityRotation.Yaw, 0.0f}, 800.0f, GroundedRotationRate,
-				                        DeltaTime);
+				SmoothCharacterRotation({0.0f, LastVelocityRotation.Yaw, 0.0f}, 800.0f, GroundedRotationRate, DeltaTime);
 			}
 			else if (RotationMode == EALSRotationMode::LookingDirection)
 			{
