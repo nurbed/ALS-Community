@@ -667,8 +667,7 @@ private:
 	//TODO: @ALS surround with WITH_EDITOR_DATA or !UE_SHIPPING
 	// ReSharper disable once CppUE4ProbableMemoryIssuesWithUObject
 	UPROPERTY()
-<<<<<<< HEAD
-	UALSDebugComponent* DebugComponent = nullptr;
+	UALSDebugComponent* ALSDebugComponent = nullptr;
 
 	//@Galileo mod Begin
 protected:
@@ -676,7 +675,4 @@ protected:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 	//@Galileo mod End
-=======
-	UALSDebugComponent* ALSDebugComponent = nullptr;
->>>>>>> Dyanikoglu/main
 };

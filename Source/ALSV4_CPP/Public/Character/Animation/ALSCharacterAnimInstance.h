@@ -304,13 +304,8 @@ protected:
 
 	/** IK Bone Names */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Anim Graph - Foot IK")
-<<<<<<< HEAD
-	FName IkFootL_BoneName = NAME_ik_foot_l;
-
-=======
 	FName IkFootL_BoneName = FName(TEXT("ik_foot_l"));
-	
->>>>>>> Dyanikoglu/main
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Anim Graph - Foot IK")
 	FName IkFootR_BoneName = FName(TEXT("ik_foot_r"));
 
