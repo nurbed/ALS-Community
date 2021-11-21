@@ -76,11 +76,13 @@ enum class EALSOverlayState : uint8
 	Rifle,
 	PistolOneHanded,
 	PistolTwoHanded,
-	Bow,
+	Crossbow,
 	Torch,
 	Binoculars,
 	Box,
-	Barrel
+	Barrel,
+	Guard,
+	None,
 };
 
 /**

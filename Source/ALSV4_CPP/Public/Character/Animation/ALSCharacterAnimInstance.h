@@ -269,6 +269,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration", Meta = (
 		ShowOnlyInnerProperties))
 	FALSAnimConfiguration Config;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration")
+	float MinSpeedForMovement = 150.f;
 
 	/** Blend Curves */
 

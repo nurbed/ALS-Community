@@ -73,7 +73,7 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	//                                  &AALSBaseCharacter::VelocityDirectionPressedAction);
 	// PlayerInputComponent->BindAction("SelectRotationMode_2", IE_Pressed, this,
 	//                                  &AALSBaseCharacter::LookingDirectionPressedAction);
-	
+
 	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Pressed, this, &AALSBaseCharacter::OnSprintButtonPress);
 	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Released, this, &AALSBaseCharacter::OnSprintButtonRelease);
 
@@ -125,7 +125,7 @@ void AALSBaseCharacter::Replicated_PlayMontage_Implementation(UAnimMontage* Mont
 void AALSBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// If we're in networked game, disable curved movement
 	bEnableNetworkOptimizations = !IsNetMode(NM_Standalone);
 
@@ -191,8 +191,8 @@ void AALSBaseCharacter::PreInitializeComponents()
 	// }
 	// Animation instance should be assigned if we're not in editor preview
 	checkf(MainAnimInstance || GetWorld()->WorldType == EWorldType::EditorPreview,
-		        TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
-		        *GetName());
+	       TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
+	       *GetName());
 	//@Galileo mod End
 }
 
@@ -262,7 +262,7 @@ void AALSBaseCharacter::RagdollStart()
 
 	// Fixes character mesh is showing default A pose for a split-second just before ragdoll ends in listen server games
 	GetMesh()->bOnlyAllowAutonomousTickPose = true;
-	
+
 	SetReplicateMovement(false);
 }
 
@@ -393,18 +393,24 @@ void AALSBaseCharacter::Server_SetDesiredGait_Implementation(EALSGait NewGait)
 	SetDesiredGait(NewGait);
 }
 
-void AALSBaseCharacter::SetDesiredRotationMode(EALSRotationMode NewRotMode)
+void AALSBaseCharacter::SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant)
 {
 	DesiredRotationMode = NewRotMode;
 	if (GetLocalRole() == ROLE_AutonomousProxy)
 	{
 		Server_SetDesiredRotationMode(NewRotMode);
 	}
+	//@ALS mod Begin
+	if (bApplyInstant)
+	{
+		SetRotationMode(DesiredRotationMode);
+	}
+	//@ALS mod End
 }
 
-void AALSBaseCharacter::Server_SetDesiredRotationMode_Implementation(EALSRotationMode NewRotMode)
+void AALSBaseCharacter::Server_SetDesiredRotationMode_Implementation(EALSRotationMode NewRotMode, bool bApplyInstant)
 {
-	SetDesiredRotationMode(NewRotMode);
+	SetDesiredRotationMode(NewRotMode, bApplyInstant); //@ALS mod instant application
 }
 
 void AALSBaseCharacter::SetRotationMode(const EALSRotationMode NewRotationMode)
@@ -771,9 +777,11 @@ void AALSBaseCharacter::SetActorLocationDuringRagdoll(float DeltaTime)
 	// Determine wether the ragdoll is facing up or down and set the target rotation accordingly.
 	const FRotator PelvisRot = GetMesh()->GetSocketRotation(NAME_Pelvis);
 
-	if (bReversedPelvis) {
+	if (bReversedPelvis)
+	{
 		bRagdollFaceUp = PelvisRot.Roll > 0.0f;
-	} else
+	}
+	else
 	{
 		bRagdollFaceUp = PelvisRot.Roll < 0.0f;
 	}
@@ -1589,7 +1597,7 @@ void AALSBaseCharacter::OnRep_VisibleMesh(USkeletalMesh* NewVisibleMesh)
 #if WITH_EDITOR
 void AALSBaseCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	if(GetMesh() && GetMesh()->GetAnimInstance() && !GetMesh()->GetAnimInstance()->IsA<UALSCharacterAnimInstance>())
+	if (GetMesh() && GetMesh()->GetAnimInstance() && !GetMesh()->GetAnimInstance()->IsA<UALSCharacterAnimInstance>())
 	{
 		UE_LOG(LogALS, Error, TEXT("The Animation BP in the character %s must be of type ALS Character Anim Instance"), *GetName());
 	}

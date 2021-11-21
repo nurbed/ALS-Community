@@ -276,6 +276,7 @@ public:
 	}
 };
 
+//TODO: delete and switch with Tag
 USTRUCT(BlueprintType)
 struct FALSOverlayState
 {
@@ -308,9 +309,11 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool PistolTwoHanded_ = false;
-
+	
+	//@ALS Mod Begin
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
-	bool Bow_ = false;
+	bool Crossbow_ = false;
+	//@ALS Mod End
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool Torch_ = false;
@@ -324,6 +327,10 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool Barrel_ = false;
 
+	//@ALS Mod Begin
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
+	bool Guard_ = true;
+	//@ALS Mod End
 public:
 	FALSOverlayState()
 	{
@@ -339,11 +346,16 @@ public:
 	const bool& Rifle() const { return Rifle_; }
 	const bool& PistolOneHanded() const { return PistolOneHanded_; }
 	const bool& PistolTwoHanded() const { return PistolTwoHanded_; }
-	const bool& Bow() const { return Bow_; }
+	//@ALS Mod Begin
+	const bool& Crossbow() const { return Crossbow_; }
+	//@ALS Mod End
 	const bool& Torch() const { return Torch_; }
 	const bool& Binoculars() const { return Binoculars_; }
 	const bool& Box() const { return Box_; }
 	const bool& Barrel() const { return Barrel_; }
+	//@ALS Mod Begin
+	const bool& Guard() const { return Guard_; }
+	//@ALS Mod End
 
 	operator EALSOverlayState() const { return State; }
 
@@ -358,11 +370,12 @@ public:
 		Rifle_ = State == EALSOverlayState::Rifle;
 		PistolOneHanded_ = State == EALSOverlayState::PistolOneHanded;
 		PistolTwoHanded_ = State == EALSOverlayState::PistolTwoHanded;
-		Bow_ = State == EALSOverlayState::Bow;
+		Crossbow_ = State == EALSOverlayState::Crossbow;
 		Torch_ = State == EALSOverlayState::Torch;
 		Binoculars_ = State == EALSOverlayState::Binoculars;
 		Box_ = State == EALSOverlayState::Box;
 		Barrel_ = State == EALSOverlayState::Barrel;
+		Guard_ = State == EALSOverlayState::Guard;
 	}
 };
 

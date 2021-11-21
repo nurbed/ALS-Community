@@ -200,11 +200,12 @@ public:
 	UFUNCTION(BlueprintGetter, Category = "ALS|Input")
 	EALSRotationMode GetDesiredRotationMode() const { return DesiredRotationMode; }
 
+	
 	UFUNCTION(BlueprintSetter, Category = "ALS|Input")
-	void SetDesiredRotationMode(EALSRotationMode NewRotMode);
+	void SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//@ALS mod added bool 
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Character States")
-	void Server_SetDesiredRotationMode(EALSRotationMode NewRotMode);
+	void Server_SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//@ALS mod added bool 
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Input")
 	FVector GetPlayerMovementInput() const;

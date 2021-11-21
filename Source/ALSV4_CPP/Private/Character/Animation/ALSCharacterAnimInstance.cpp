@@ -185,7 +185,7 @@ void UALSCharacterAnimInstance::PlayDynamicTransition(float ReTriggerDelay, FALS
 bool UALSCharacterAnimInstance::ShouldMoveCheck() const
 {
 	return (CharacterInformation.bIsMoving && CharacterInformation.bHasMovementInput) ||
-		CharacterInformation.Speed > 150.0f;
+		CharacterInformation.Speed > MinSpeedForMovement;//@ALS mod tunable value (before was hardcoded to 150.f)
 }
 
 bool UALSCharacterAnimInstance::CanRotateInPlace() const
