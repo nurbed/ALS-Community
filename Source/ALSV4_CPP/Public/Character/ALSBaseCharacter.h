@@ -672,6 +672,9 @@ private:
 
 	//@Galileo mod Begin
 protected:
+	/* GetControlRotation() from Pawn */
+	virtual FRotator GetCustomControlRotation() const;
+	
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif

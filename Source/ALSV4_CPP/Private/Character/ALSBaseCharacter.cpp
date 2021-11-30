@@ -1047,12 +1047,20 @@ void AALSBaseCharacter::OnLandFrictionReset()
 	GetCharacterMovement()->BrakingFrictionFactor = 0.0f;
 }
 
+// ALS Mod Begin
+FRotator AALSBaseCharacter::GetCustomControlRotation() const
+{
+	return GetControlRotation();
+}
+// AL Mod End
+
+
 void AALSBaseCharacter::SetEssentialValues(float DeltaTime)
 {
 	if (GetLocalRole() != ROLE_SimulatedProxy)
 	{
 		ReplicatedCurrentAcceleration = GetCharacterMovement()->GetCurrentAcceleration();
-		ReplicatedControlRotation = GetControlRotation();
+		ReplicatedControlRotation = GetCustomControlRotation(); // ALS Mod - it was GetControlRotation from Pawn.h
 		EasedMaxAcceleration = GetCharacterMovement()->GetMaxAcceleration();
 	}
 

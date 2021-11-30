@@ -204,7 +204,7 @@ bool UALSCharacterAnimInstance::CanTurnInPlace() const
 bool UALSCharacterAnimInstance::CanDynamicTransition() const
 {
 	return
-		bCanPlayDynamicTransition //@Galileo mod
+		bCanPlayDynamicTransition //@ALS mod
 		&& GetCurveValue(NAME_Enable_Transition) >= 0.99f;
 }
 
