@@ -239,6 +239,13 @@ protected:
 public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values")
 	FVector2D SmoothedAimingAngle = FVector2D::ZeroVector;
+	
+	//@Galileo mod Begin	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration")
+	float SpineRotationMultiplier = -1.f;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values")
+	FRotator SpineRotationToApply = FRotator::ZeroRotator;
+	//@Galileo mod End
 
 protected:
 	/** Anim Graph - Ragdoll */

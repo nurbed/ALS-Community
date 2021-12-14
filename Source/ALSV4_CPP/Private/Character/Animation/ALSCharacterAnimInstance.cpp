@@ -278,6 +278,10 @@ void UALSCharacterAnimInstance::UpdateAimingValues(float DeltaSeconds)
 	                                                              FMath::Abs(SmoothedAimingAngle.X));
 	AimingValues.ForwardYawTime = FMath::GetMappedRangeValueClamped({-180.0f, 180.0f}, {0.0f, 1.0f},
 	                                                                SmoothedAimingAngle.X);
+
+	//@Galileo mod Begin
+	SpineRotationToApply.Roll = SpineRotationMultiplier * SmoothedAimingAngle.Y;
+	//@Galileo mod End
 }
 
 void UALSCharacterAnimInstance::UpdateLayerValues()
