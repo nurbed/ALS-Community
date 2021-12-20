@@ -53,8 +53,8 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputRightAxis, this, &AALSBaseCharacter::PlayerRightMovementInput);
 
 	//@ALS mod the Camera is handled by the CAGCharacter
-	// PlayerInputComponent->BindAxis("LookUpRate", this, &AALSBaseCharacter::PlayerCameraUpInput);
-	// PlayerInputComponent->BindAxis("TurnRate", this, &AALSBaseCharacter::PlayerCameraRightInput);
+	// PlayerInputComponent->BindAxis("LookUp", this, &AALSBaseCharacter::PlayerCameraUpInput);
+	// PlayerInputComponent->BindAxis("Turn", this, &AALSBaseCharacter::PlayerCameraRightInput);
 
 	//@ALS mod the Jump is handled by CAG
 	// PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &AALSBaseCharacter::JumpPressedAction);
