@@ -326,6 +326,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Essential Information")
 	void GetControlForwardRightVector(FVector& Forward, FVector& Right) const;
+	
+	void PlayerForwardMovementInput(float Value);
+
+	void PlayerRightMovementInput(float Value);
 
 protected:
 	/** Ragdoll System */
@@ -386,9 +390,9 @@ protected:
 
 	/** Input */
 
-	void PlayerForwardMovementInput(float Value);
-
-	void PlayerRightMovementInput(float Value);
+	// void PlayerForwardMovementInput(float Value);
+	
+	// void PlayerRightMovementInput(float Value);
 
 	//@ALS mod not used by our system. Adds controller pitch. TODO: @ALS remove or something can be useful ?
 	void PlayerCameraUpInput(float Value);

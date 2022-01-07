@@ -49,6 +49,7 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	//HERE
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputForwardAxis, this, &AALSBaseCharacter::PlayerForwardMovementInput);
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputRightAxis, this, &AALSBaseCharacter::PlayerRightMovementInput);
 
@@ -74,8 +75,8 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// PlayerInputComponent->BindAction("SelectRotationMode_2", IE_Pressed, this,
 	//                                  &AALSBaseCharacter::LookingDirectionPressedAction);
 
-	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Pressed, this, &AALSBaseCharacter::OnSprintButtonPress);
-	PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Released, this, &AALSBaseCharacter::OnSprintButtonRelease);
+	// PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Pressed, this, &AALSBaseCharacter::OnSprintButtonPress);
+	// PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Released, this, &AALSBaseCharacter::OnSprintButtonRelease);
 
 	//@ALS mod currently haven't the aim in the project TODO: @ALS remove or something can be useful ?
 	// PlayerInputComponent->BindAction("AimAction", IE_Pressed, this, &AALSBaseCharacter::AimPressedAction);
@@ -1378,6 +1379,7 @@ void AALSBaseCharacter::GetControlForwardRightVector(FVector& Forward, FVector& 
 	Forward = GetInputAxisValue(UALSSettings::Get()->InputForwardAxis) * UKismetMathLibrary::GetForwardVector(ControlRot);
 	Right = GetInputAxisValue(UALSSettings::Get()->InputRightAxis) * UKismetMathLibrary::GetRightVector(ControlRot);
 }
+
 
 FVector AALSBaseCharacter::GetPlayerMovementInput() const
 {
