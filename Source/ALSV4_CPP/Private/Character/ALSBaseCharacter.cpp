@@ -1,3 +1,4 @@
+
 // Project:         Advanced Locomotion System V4 on C++
 // Copyright:       Copyright (C) 2021 Doğa Can Yanıkoğlu
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
@@ -638,14 +639,12 @@ bool AALSBaseCharacter::CanSprint() const
 	// Determine if the character is currently able to sprint based on the Rotation mode and current acceleration
 	// (input) rotation. If the character is in the Looking Rotation mode, only allow sprinting if there is full
 	// movement input and it is faced forward relative to the camera + or - 50 degrees.
-
 	if (!bHasMovementInput || RotationMode == EALSRotationMode::Aiming)
 	{
 		return false;
 	}
 
 	const bool bValidInputAmount = MovementInputAmount > 0.9f;
-
 	if (RotationMode == EALSRotationMode::VelocityDirection)
 	{
 		return bValidInputAmount;

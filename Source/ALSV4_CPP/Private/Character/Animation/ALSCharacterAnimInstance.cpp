@@ -67,7 +67,7 @@ void UALSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (!Character)
+	if (!Character || !Character->GetCharacterMovement())
 	{
 		// Fix character looking right on editor
 		RotationMode = EALSRotationMode::VelocityDirection;
