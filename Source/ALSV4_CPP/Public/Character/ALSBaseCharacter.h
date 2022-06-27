@@ -463,6 +463,10 @@ protected:
 	UPROPERTY()
 	UALSCharacterMovementComponent* ALSCharacterMovementComponent;
 
+	//Temporary
+	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = "ALS|Input")
+	bool bCanMove = true;
+
 	/** Input */
 
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = "ALS|Input")

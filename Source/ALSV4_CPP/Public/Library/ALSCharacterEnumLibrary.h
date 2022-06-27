@@ -68,16 +68,16 @@ enum class EALSMovementState : uint8
 UENUM(BlueprintType)
 enum class EALSOverlayState : uint8
 {
-	Default,
+	Default UMETA(DisplayName = "Longsword", ToolTip = "Longsword"),
 	Masculine,
 	Feminine,
-	Injured,
+	Injured UMETA(DisplayName = "Polearm", ToolTip = "Polearm"),
 	HandsTied,
-	Rifle,
-	PistolOneHanded,
-	PistolTwoHanded,
+	Rifle UMETA(DisplayName = "DualWield", ToolTip = "DualWield"),
+	PistolOneHanded UMETA(DisplayName = "Shield", ToolTip = "Shield"),
+	PistolTwoHanded UMETA(DisplayName = "Guard", ToolTip = "Guard"),
 	Crossbow,
-	Torch,
+	Torch UMETA(DisplayName = "Greatsword", ToolTip = "Greatsword"),
 	Binoculars,
 	Box,
 	Barrel,

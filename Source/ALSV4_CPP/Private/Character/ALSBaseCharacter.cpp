@@ -50,10 +50,10 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	//HERE
+	
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputForwardAxis, this, &AALSBaseCharacter::PlayerForwardMovementInput);
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputRightAxis, this, &AALSBaseCharacter::PlayerRightMovementInput);
-
+	
 	//@ALS mod the Camera is handled by the CAGCharacter
 	// PlayerInputComponent->BindAxis("LookUp", this, &AALSBaseCharacter::PlayerCameraUpInput);
 	// PlayerInputComponent->BindAxis("Turn", this, &AALSBaseCharacter::PlayerCameraRightInput);
@@ -1390,7 +1390,7 @@ FVector AALSBaseCharacter::GetPlayerMovementInput() const
 
 void AALSBaseCharacter::PlayerForwardMovementInput(float Value)
 {
-	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
+	if ((MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir) && bCanMove)
 	{
 		// Default camera relative movement behavior
 		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(Value, GetInputAxisValue(UALSSettings::Get()->InputRightAxis)).Key;
@@ -1401,7 +1401,7 @@ void AALSBaseCharacter::PlayerForwardMovementInput(float Value)
 
 void AALSBaseCharacter::PlayerRightMovementInput(float Value)
 {
-	if (MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir)
+	if ((MovementState == EALSMovementState::Grounded || MovementState == EALSMovementState::InAir) && bCanMove)
 	{
 		// Default camera relative movement behavior
 		const float Scale = UALSMathLibrary::FixDiagonalGamepadValues(GetInputAxisValue(UALSSettings::Get()->InputForwardAxis), Value)

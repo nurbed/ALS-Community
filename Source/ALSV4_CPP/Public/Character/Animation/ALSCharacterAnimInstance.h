@@ -84,7 +84,7 @@ public:
 	 * states of the AnimBP so that the character can only turn while in those states..
 	 */
 	UFUNCTION(BlueprintCallable, Category = "ALS|Grounded")
-	bool CanTurnInPlace() const;
+	virtual bool CanTurnInPlace() const;
 
 	/**
 	 * Only perform a Dynamic Transition check if the "Enable Transition" curve is fully weighted.

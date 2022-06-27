@@ -59,7 +59,7 @@ class ALSV4_CPP_API UALSCharacterMovementComponent : public UCharacterMovementCo
 
 	// Movement Settings Variables
 	UPROPERTY()
-	uint8 bRequestMovementSettingsChange = 1;
+	uint8 bRequestMovementSettingsChange : 1;
 
 	UPROPERTY()
 	EALSGait AllowedGait = EALSGait::Walking;
