@@ -310,10 +310,10 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, DisplayName = "Guard"), Category = "ALS|Character States")
 	bool PistolTwoHanded_ = false;
 	
-	//@ALS Mod Begin
+	//JYAMMA MOD BEGIN
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool Crossbow_ = false;
-	//@ALS Mod End
+	//JYAMMA MOD END
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, DisplayName = "Greatsword"), Category = "ALS|Character States")
 	bool Torch_ = false;
@@ -327,10 +327,10 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool Barrel_ = false;
 
-	//@ALS Mod Begin
+	//JYAMMA MOD BEGIN
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "ALS|Character States")
 	bool Guard_ = true;
-	//@ALS Mod End
+	//JYAMMA MOD END
 public:
 	FALSOverlayState()
 	{
@@ -346,16 +346,16 @@ public:
 	const bool& Rifle() const { return Rifle_; }
 	const bool& PistolOneHanded() const { return PistolOneHanded_; }
 	const bool& PistolTwoHanded() const { return PistolTwoHanded_; }
-	//@ALS Mod Begin
+	//JYAMMA MOD BEGIN
 	const bool& Crossbow() const { return Crossbow_; }
-	//@ALS Mod End
+	//JYAMMA MOD END
 	const bool& Torch() const { return Torch_; }
 	const bool& Binoculars() const { return Binoculars_; }
 	const bool& Box() const { return Box_; }
 	const bool& Barrel() const { return Barrel_; }
-	//@ALS Mod Begin
+	//JYAMMA MOD BEGIN
 	const bool& Guard() const { return Guard_; }
-	//@ALS Mod End
+	//JYAMMA MOD END
 
 	operator EALSOverlayState() const { return State; }
 

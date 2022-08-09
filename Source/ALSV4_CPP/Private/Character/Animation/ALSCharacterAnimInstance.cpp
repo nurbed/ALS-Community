@@ -185,7 +185,7 @@ void UALSCharacterAnimInstance::PlayDynamicTransition(float ReTriggerDelay, FALS
 bool UALSCharacterAnimInstance::ShouldMoveCheck() const
 {
 	return (CharacterInformation.bIsMoving && CharacterInformation.bHasMovementInput) ||
-		CharacterInformation.Speed > MinSpeedForMovement;//@ALS mod tunable value (before was hardcoded to 150.f)
+		CharacterInformation.Speed > MinSpeedForMovement;//JYAMMA MOD tunable value (before was hardcoded to 150.f)
 }
 
 bool UALSCharacterAnimInstance::CanRotateInPlace() const
@@ -204,7 +204,7 @@ bool UALSCharacterAnimInstance::CanTurnInPlace() const
 bool UALSCharacterAnimInstance::CanDynamicTransition() const
 {
 	return
-		bCanPlayDynamicTransition //@ALS mod
+		bCanPlayDynamicTransition //JYAMMA MOD
 		&& GetCurveValue(NAME_Enable_Transition) >= 0.99f;
 }
 
@@ -279,9 +279,9 @@ void UALSCharacterAnimInstance::UpdateAimingValues(float DeltaSeconds)
 	AimingValues.ForwardYawTime = FMath::GetMappedRangeValueClamped({-180.0f, 180.0f}, {0.0f, 1.0f},
 	                                                                SmoothedAimingAngle.X);
 
-	//@Galileo mod Begin
+	// JYAMMA MOD BEGIN
 	SpineRotationToApply.Roll = SpineRotationMultiplier * SmoothedAimingAngle.Y;
-	//@Galileo mod End
+	// JYAMMA MOD END
 }
 
 void UALSCharacterAnimInstance::UpdateLayerValues()
@@ -578,10 +578,10 @@ void UALSCharacterAnimInstance::TurnInPlaceCheck(float DeltaSeconds)
 
 void UALSCharacterAnimInstance::DynamicTransitionCheck()
 {
-	//@Galileo mod Begin
+	// JYAMMA MOD BEGIN
 	if (!bCanPlayDynamicTransition) //optimization
 		return;
-	//@Galileo mod End
+	// JYAMMA MOD END
 
 	// Check each foot to see if the location difference between the IK_Foot bone and its desired / target location
 	// (determined via a virtual bone) exceeds a threshold. If it does, play an additive transition animation on that foot.
@@ -693,7 +693,7 @@ float UALSCharacterAnimInstance::GetAnimCurveClamped(const FName& Name, float Bi
 	return FMath::Clamp(GetCurveValue(Name) + Bias, ClampMin, ClampMax);
 }
 
-//@Galileo mod Begin
+// JYAMMA MOD BEGIN
 void UALSCharacterAnimInstance::SetCanPlayDynamicTransition(bool bValue)
 {
 	bCanPlayDynamicTransition = bValue;
@@ -701,7 +701,7 @@ void UALSCharacterAnimInstance::SetCanPlayDynamicTransition(bool bValue)
 		GetWorld()->GetTimerManager().ClearTimer(PlayDynamicTransitionTimer);
 }
 
-//@Galileo mod End
+// JYAMMA MOD END
 
 FALSVelocityBlend UALSCharacterAnimInstance::CalculateVelocityBlend() const
 {
@@ -929,7 +929,7 @@ void UALSCharacterAnimInstance::TurnInPlace(FRotator TargetRotation, float PlayR
 	{
 		return;
 	}
-	PlaySlotAnimationAsDynamicMontage(TargetTurnAsset.Animation, TargetTurnAsset.SlotName, 0.2f, 0.2f,
+	PlaySlotAnimationAsDynamicMontage(TargetTurnAsset.Animation, TargetTurnAsset.SlotName, TargetTurnAsset.BlendInTime, TargetTurnAsset.BlendOutTime,
 	                                  TargetTurnAsset.PlayRate * PlayRateScale, 1, 0.0f, StartTime);
 
 	// Step 4: Scale the rotation amount (gets scaled in animgraph) to compensate for turn angle (If Allowed) and play rate.

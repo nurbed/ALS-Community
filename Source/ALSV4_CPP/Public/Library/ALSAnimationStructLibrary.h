@@ -85,6 +85,12 @@ struct FALSTurnInPlaceAsset
 	float PlayRate = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ALS|Turn In Place")
+	float BlendInTime = 0.2f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ALS|Turn In Place")
+	float BlendOutTime = 0.2f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ALS|Turn In Place")
 	bool ScaleTurnAngle = true;
 };
 

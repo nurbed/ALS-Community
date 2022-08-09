@@ -202,10 +202,10 @@ public:
 
 	
 	UFUNCTION(BlueprintSetter, Category = "ALS|Input")
-	void SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//@ALS mod added bool 
+	void SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//JYAMMA MOD added bool 
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Character States")
-	void Server_SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//@ALS mod added bool 
+	void Server_SetDesiredRotationMode(EALSRotationMode NewRotMode, bool bApplyInstant = true);//JYAMMA MOD added bool 
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Input")
 	FVector GetPlayerMovementInput() const;
@@ -394,55 +394,55 @@ protected:
 	
 	// void PlayerRightMovementInput(float Value);
 
-	//@ALS mod not used by our system. Adds controller pitch. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD not used by our system. Adds controller pitch. TODO: @ALS remove or something can be useful ?
 	void PlayerCameraUpInput(float Value);
 
-	//@ALS mod not used by our system. Adds controller Yaw. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD not used by our system. Adds controller Yaw. TODO: @ALS remove or something can be useful ?
 	void PlayerCameraRightInput(float Value);
 
-	//@ALS mod not used by our system TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD not used by our system TODO: @ALS remove or something can be useful ?
 	void JumpPressedAction();
 	
-	//@ALS mod not used by our system TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD not used by our system TODO: @ALS remove or something can be useful ?
 	void JumpReleasedAction();
 
-	//@ALS mod -> before was void SprintPressedAction();
+	//JYAMMA MOD -> before was void SprintPressedAction();
 	virtual void OnSprintButtonPress();
 	
-	//@ALS mod -> before was void SprintReleasedAction();
+	//JYAMMA MOD -> before was void SprintReleasedAction();
 	virtual void OnSprintButtonRelease();
 
-	//@ALS mod -> currently isn't in game TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD -> currently isn't in game TODO: @ALS remove or something can be useful ?
 	void AimPressedAction();
 
-	//@ALS mod -> currently isn't in game TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD -> currently isn't in game TODO: @ALS remove or something can be useful ?
 	void AimReleasedAction();
 
-	//@ALS mod not used by our game.
+	//JYAMMA MOD not used by our game.
 	//This func toggles the switch between first to third person after a delay.
 	//If the button is released before the delay doesn't makes the switch.
 	//TODO: @ALS remove or something can be useful ?
 	void CameraPressedAction();
 
-	//@ALS mod not used by our game.
+	//JYAMMA MOD not used by our game.
 	//This func toggles the shoulder switch if the button has been holded less than ViewModeSwitchHoldTime
 	//TODO: @ALS remove or something can be useful ?
 	void CameraReleasedAction();
 
 	void OnSwitchCameraMode();
 
-	//@ALS mod not used by our system. This func toggles the stance change. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD not used by our system. This func toggles the stance change. TODO: @ALS remove or something can be useful ?
 	void StancePressedAction();
 
 	void WalkPressedAction();
 
-	//@ALS mod can't be triggered via input. This func toggles the ragdoll. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD can't be triggered via input. This func toggles the ragdoll. TODO: @ALS remove or something can be useful ?
 	void RagdollPressedAction();
 
-	//@ALS mod can't be triggered via input. This func triggers movement NOT strafed. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD can't be triggered via input. This func triggers movement NOT strafed. TODO: @ALS remove or something can be useful ?
 	void VelocityDirectionPressedAction();
 
-	//@ALS mod can't be triggered via input. This func triggers movement strafed. TODO: @ALS remove or something can be useful ?
+	//JYAMMA MOD can't be triggered via input. This func triggers movement strafed. TODO: @ALS remove or something can be useful ?
 	void LookingDirectionPressedAction();
 
 	/** Replication */
@@ -680,7 +680,7 @@ private:
 	UPROPERTY()
 	UALSDebugComponent* ALSDebugComponent = nullptr;
 
-	//@Galileo mod Begin
+	// JYAMMA MOD BEGIN
 protected:
 	/* GetControlRotation() from Pawn */
 	virtual FRotator GetCustomControlRotation() const;
@@ -688,5 +688,5 @@ protected:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
-	//@Galileo mod End
+	// JYAMMA MOD END
 };

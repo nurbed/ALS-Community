@@ -50,42 +50,8 @@ void AALSBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputForwardAxis, this, &AALSBaseCharacter::PlayerForwardMovementInput);
 	PlayerInputComponent->BindAxis(UALSSettings::Get()->InputRightAxis, this, &AALSBaseCharacter::PlayerRightMovementInput);
-	
-	//@ALS mod the Camera is handled by the CAGCharacter
-	// PlayerInputComponent->BindAxis("LookUp", this, &AALSBaseCharacter::PlayerCameraUpInput);
-	// PlayerInputComponent->BindAxis("Turn", this, &AALSBaseCharacter::PlayerCameraRightInput);
-
-	//@ALS mod the Jump is handled by CAG
-	// PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &AALSBaseCharacter::JumpPressedAction);
-	// PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &AALSBaseCharacter::JumpReleasedAction);
-
-	//@ALS mod the stance change doesn't exist in our project TODO: @ALS remove or something can be useful ?
-	// PlayerInputComponent->BindAction("StanceAction", IE_Pressed, this, &AALSBaseCharacter::StancePressedAction);
-
-	//PlayerInputComponent->BindAction("WalkAction", IE_Pressed, this, &AALSBaseCharacter::WalkPressedAction);
-
-	//@ALS mod the Ragdoll cannot be triggered by an input TODO: @ALS remove or something can be useful ?
-	// PlayerInputComponent->BindAction("RagdollAction", IE_Pressed, this, &AALSBaseCharacter::RagdollPressedAction);
-
-	//@ALS mod the Locomotion rotation mode is triggered by the strafe TODO: @ALS remove or something can be useful ?
-	// PlayerInputComponent->BindAction("SelectRotationMode_1", IE_Pressed, this,
-	//                                  &AALSBaseCharacter::VelocityDirectionPressedAction);
-	// PlayerInputComponent->BindAction("SelectRotationMode_2", IE_Pressed, this,
-	//                                  &AALSBaseCharacter::LookingDirectionPressedAction);
-
-	// PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Pressed, this, &AALSBaseCharacter::OnSprintButtonPress);
-	// PlayerInputComponent->BindAction(UALSSettings::Get()->SprintInput, IE_Released, this, &AALSBaseCharacter::OnSprintButtonRelease);
-
-	//@ALS mod currently haven't the aim in the project TODO: @ALS remove or something can be useful ?
-	// PlayerInputComponent->BindAction("AimAction", IE_Pressed, this, &AALSBaseCharacter::AimPressedAction);
-	// PlayerInputComponent->BindAction("AimAction", IE_Released, this, &AALSBaseCharacter::AimReleasedAction);
-
-	//@ALS mod the FPS Camera and the shoulder switch aren't in the project TODO: @ALS remove or something can be useful ?
-	// PlayerInputComponent->BindAction("CameraAction", IE_Pressed, this, &AALSBaseCharacter::CameraPressedAction);
-	// PlayerInputComponent->BindAction("CameraAction", IE_Released, this, &AALSBaseCharacter::CameraReleasedAction);
 }
 
 void AALSBaseCharacter::PostInitializeComponents()
@@ -175,7 +141,7 @@ void AALSBaseCharacter::PreInitializeComponents()
 	{
 		MainAnimInstance = Cast<UALSCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 	}
-	//@Galileo mod Begin
+	// JYAMMA MOD BEGIN
 	// if (!MainAnimInstance)
 	// {
 	// 	//Animation instance should be assigned if we're not in editor preview
@@ -187,7 +153,7 @@ void AALSBaseCharacter::PreInitializeComponents()
 	checkf(MainAnimInstance || GetWorld()->WorldType == EWorldType::EditorPreview,
 	       TEXT("%s doesn't have a valid animation instance assigned. That's not allowed"),
 	       *GetName());
-	//@Galileo mod End
+	// JYAMMA MOD END
 }
 
 void AALSBaseCharacter::SetAimYawRate(float NewAimYawRate)
@@ -395,17 +361,17 @@ void AALSBaseCharacter::SetDesiredRotationMode(EALSRotationMode NewRotMode, bool
 	{
 		Server_SetDesiredRotationMode(NewRotMode);
 	}
-	//@ALS mod Begin
+	//JYAMMA MOD BEGIN
 	if (bApplyInstant)
 	{
 		SetRotationMode(DesiredRotationMode);
 	}
-	//@ALS mod End
+	//JYAMMA MOD END
 }
 
 void AALSBaseCharacter::Server_SetDesiredRotationMode_Implementation(EALSRotationMode NewRotMode, bool bApplyInstant)
 {
-	SetDesiredRotationMode(NewRotMode, bApplyInstant); //@ALS mod instant application
+	SetDesiredRotationMode(NewRotMode, bApplyInstant); //JYAMMA MOD instant application
 }
 
 void AALSBaseCharacter::SetRotationMode(const EALSRotationMode NewRotationMode, bool bForce)
@@ -1656,7 +1622,7 @@ void AALSBaseCharacter::OnRep_VisibleMesh(USkeletalMesh* NewVisibleMesh)
 	OnVisibleMeshChanged(NewVisibleMesh);
 }
 
-//@Galileo mod Begin
+// JYAMMA MOD BEGIN
 #if WITH_EDITOR
 void AALSBaseCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -1666,4 +1632,4 @@ void AALSBaseCharacter::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
 	}
 }
 #endif
-//@Galileo mod End
+// JYAMMA MOD END

@@ -38,7 +38,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation")
-	virtual void PlayTransition(const FALSDynamicMontageParams& Parameters);//@Galileo mod added virtual
+	virtual void PlayTransition(const FALSDynamicMontageParams& Parameters); // JYAMMA MOD added virtual
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Animation")
 	void PlayTransitionChecked(const FALSDynamicMontageParams& Parameters);
@@ -240,12 +240,12 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values")
 	FVector2D SmoothedAimingAngle = FVector2D::ZeroVector;
 	
-	//@Galileo mod Begin	
+	// JYAMMA MOD BEGIN	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Main Configuration")
 	float SpineRotationMultiplier = -1.f;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Read Only Data|Anim Graph - Aiming Values")
 	FRotator SpineRotationToApply = FRotator::ZeroRotator;
-	//@Galileo mod End
+	// JYAMMA MOD END
 
 protected:
 	/** Anim Graph - Ragdoll */
@@ -318,10 +318,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Configuration|Anim Graph - Foot IK")
 	FName IkFootR_BoneName = FName(TEXT("ik_foot_r"));
 
-	//@Galileo mod Begin
+	// JYAMMA MOD BEGIN
 	FORCEINLINE bool CanPlayDynamicTransition() const { return bCanPlayDynamicTransition; }
 	void SetCanPlayDynamicTransition(bool bValue);
-	//@Galileo mod End
+	// JYAMMA MOD END
 
 private:
 	FTimerHandle OnPivotTimer;
